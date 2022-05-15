@@ -40,7 +40,7 @@ router.get("/sightings", (req, res, next) => {
 
 // SHOW
 // GET - individual sighting
-router.get("/sightings:id", (req, res, next) => {
+router.get("/sightings/:id", (req, res, next) => {
 	// :id acquired from URL via req.params.id
 	Sighting.findById(req.params.id)
 		.populate("owner")
