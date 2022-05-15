@@ -18,7 +18,7 @@ As a user, I want to...
 ---
 
 ### ERD
-
+![ERD](bird_erd.png)
 ---
 
 ### Route Tables
