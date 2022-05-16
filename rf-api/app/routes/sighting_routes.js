@@ -66,6 +66,20 @@ router.post("/sightings", requireToken, (req, res, next) => {
 })
 
 // UPDATE
+router.patch("/sightings/:id", requireToken, removeBlanks, (req, res, next) => {
+	// Prevent the client from changing the sighting owner
+	delete req.body.owner
+	Sighting.findById(req.params.id)
+		.then(handle404)
+		.then(sighting => {
+			requireOwnership(req, sighting)
+			return sighting.updateOne(req.body.sighting)
+		})
+		.then(() => res.sendStatus(204))
+		.catch(next)
+})
+
+
 // DELETE
 
 module.exports = router
