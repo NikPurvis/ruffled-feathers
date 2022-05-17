@@ -2,6 +2,7 @@
 
 // Import dependencies
 const express = require("express")
+const { ObjectId } = require("mongodb")
 const passport = require("passport")
 
 // Import middleware
@@ -26,7 +27,7 @@ router.post("/comment/:sightingId", requireToken, removeBlanks, (req, res, next)
     const sightingId = req.params.sightingId
     req.body.comment.owner = req.user.id
 
-	Sighting.findById(req.params.sightingId)
+	Sighting.findById(sightingId)
         .then(handle404)
         .then(sighting => {
             console.log("This is the sighting:", sighting)
@@ -38,6 +39,23 @@ router.post("/comment/:sightingId", requireToken, removeBlanks, (req, res, next)
         .catch(next)    
 })
 
+// SHOW
+// GET - retrieve a comment
+router.get("/comment/:sightingId/:commentId", (req, res, next) => {
+    const sightingId = req.params.sightingId
+    const commentId = req.params.commentId
+    Sighting.findOne(
+        { "_id": ObjectId(sightingId) },
+        { "comments": {
+            $elemMatch: { _id: ObjectId(commentId) } }
+        }
+    )
+    .populate("owner")
+    .then(handle404)
+    .then(sighting => res.status(200).json({
+        sighting: sighting.toObject() }))
+    .catch(next)
+})
 
 
 module.exports = router
