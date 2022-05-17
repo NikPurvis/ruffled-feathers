@@ -3,6 +3,8 @@
 const mongoose = require("mongoose")
 const { Schema, model } = mongoose
 
+const commentSchema = require("./comment")
+
 const sightingSchema = new Schema(
     {
         where_seen: {
@@ -11,6 +13,7 @@ const sightingSchema = new Schema(
         },
         when_seen: {
             type: Date,
+            default: Date.now,
             required: true
         },
         weather: {
@@ -22,6 +25,7 @@ const sightingSchema = new Schema(
             type: String,
             required: true
         },
+        comments: [commentSchema],
         owner: {
             type: Schema.Types.ObjectId,
             ref: "User"
