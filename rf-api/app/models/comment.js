@@ -6,7 +6,7 @@ const { Schema } = mongoose
 
 const commentSchema = new Schema(
     {
-        body: {
+        text: {
             type: String,
             required: true
         },
