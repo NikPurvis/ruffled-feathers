@@ -60,6 +60,7 @@ router.post("/comment/:sightingId", requireToken, removeBlanks, (req, res, next)
 
 // UPDATE
 // PATCH - edit a specific comment
+// ** Work in comment owner validation **
 router.patch("/comment/:sightingId/:commentId", requireToken, removeBlanks, (req, res, next) => {
     delete req.body.owner
     const sightingId = req.params.sightingId
@@ -87,57 +88,26 @@ router.patch("/comment/:sightingId/:commentId", requireToken, removeBlanks, (req
 })
 
 
-// *** CORRECT MONGOOSE QUERY ***
-// db.sightings.updateOne({
-//     "_id": ObjectId("62847547ca56f40609183fa6")
-//   },
-//   {
-//     $set: {
-//       "comments.$[comments].text": "fffff"
-//     }
-//   },
-//   {
-//     "upsert": false,
-//     "new": true,
-//     arrayFilters: [
-//       {
-//         "comments._id": {
-//           "$eq": ObjectId("6284756eca56f40609183fae")
-//         }
-//       }
-//     ]
-//   })
-
-
-
-
-// router.patch("/comment/:sightingId/:commentId", requireToken, removeBlanks, (req,res, next) => {
-//     // // Prevent the client from changing the comment owner
-//     // delete req.body.owner
-//     const commentUpdate = req.body.comment
-//     console.log("This is the updated comment:", commentUpdate)
-//     const sightingId = req.params.sightingId
-//     const commentId = req.params.commentId
-//     Sighting.findOne(
-//         {
-//             "_id": ObjectId(sightingId),
-//             "comments": {
-//                 $elemMatch: {_id: ObjectId(commentId) }}
-//         // },{
-//         //     "$set":
-//         //         {"comments.$.body": commentUpdate}
-//         }
-//     )
-//     .then(handle404)
-//     // .then(comment => {
-//     //     requireOwnership(req, comment)
-//     //     console.log("after require c:", comment)
-//     //     console.log("after require cU:", commentUpdate)
-//     //     return comment.updateOne(commentUpdate)
-//     // })
-//     .then(() => res.sendStatus(204))
-//     .catch(next)
-// })
+// REMOVE
+// Delete - delete comment
+router.delete("/comment/:sightingId/:commentId", requireToken, (req, res, next) => {
+    const sightingId = req.params.sightingId
+    const commentId = req.params.commentId
+    Sighting.updateOne({
+        "_id": ObjectId(sightingId),
+        "comments": {
+            $elemMatch: { _id: ObjectId(commentId) }
+        }
+    },{
+        $pull: {
+            "comments": { "_id": commentId }
+        }
+    },{
+        new: true,
+    })
+    .then(() => res.sendStatus(204))
+    .catch(next)
+})
 
 
 module.exports = router
