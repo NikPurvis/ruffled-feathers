@@ -1,4 +1,4 @@
-// routes/comment_routes.js
+// routes/sighting_comment_routes.js
 
 // Import dependencies
 const express = require("express")
@@ -14,7 +14,6 @@ const removeBlanks = require("../../lib/remove_blank_fields")
 
 // Import models
 const Sighting = require("../models/sighting")
-// const Picture = require("../models/picture")
 
 // Instantiate router
 const router = express.Router()

@@ -6,7 +6,9 @@ const cors = require('cors')
 // require route files
 const userRoutes = require('./app/routes/user_routes')
 const sightingRoutes = require("./app/routes/sighting_routes")
-const commentRoutes = require("./app/routes/comment_routes")
+const sightCommentRoutes = require("./app/routes/sighting_comment_routes")
+const pictureRoutes = require("./app/routes/picture_routes")
+const picCommentRoutes = require("./app/routes/picture_comment_routes")
 
 // require middleware
 const errorHandler = require('./lib/error_handler')
@@ -68,7 +70,9 @@ app.use(requestLogger)
 // register route files
 app.use(userRoutes)
 app.use(sightingRoutes)
-app.use(commentRoutes)
+app.use(sightCommentRoutes)
+app.use(pictureRoutes)
+app.use(picCommentRoutes)
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be
