@@ -22,7 +22,7 @@ const router = express.Router()
 
 // SHOW
 // GET - retrieve a comment
-router.get("/comment/:sightingId/:commentId", (req, res, next) => {
+router.get("/sightings/:sightingId/:commentId", (req, res, next) => {
     const sightingId = req.params.sightingId
     const commentId = req.params.commentId
     Sighting.findOne(
@@ -40,7 +40,7 @@ router.get("/comment/:sightingId/:commentId", (req, res, next) => {
 
 // CREATE
 // POST - create a comment
-router.post("/comment/:sightingId", requireToken, removeBlanks, (req, res, next) => {
+router.post("/sightings/:sightingId", requireToken, removeBlanks, (req, res, next) => {
 	const comment = req.body.comment
     const sightingId = req.params.sightingId
     req.body.comment.owner = req.user.id
@@ -60,7 +60,7 @@ router.post("/comment/:sightingId", requireToken, removeBlanks, (req, res, next)
 // UPDATE
 // PATCH - edit a specific comment
 // ** Work in comment owner validation **
-router.patch("/comment/:sightingId/:commentId", requireToken, removeBlanks, (req, res, next) => {
+router.patch("/sightings/:sightingId/:commentId", requireToken, removeBlanks, (req, res, next) => {
     delete req.body.owner
     const sightingId = req.params.sightingId
     const commentId = req.params.commentId
@@ -89,7 +89,7 @@ router.patch("/comment/:sightingId/:commentId", requireToken, removeBlanks, (req
 
 // REMOVE
 // Delete - delete comment
-router.delete("/comment/:sightingId/:commentId", requireToken, (req, res, next) => {
+router.delete("/sightings/:sightingId/:commentId", requireToken, (req, res, next) => {
     const sightingId = req.params.sightingId
     const commentId = req.params.commentId
     Sighting.updateOne({
