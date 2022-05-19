@@ -13,8 +13,7 @@ const requireToken = passport.authenticate("bearer", { sesson: false })
 const removeBlanks = require("../../lib/remove_blank_fields")
 
 // Import models
-const Sighting = require("../models/sighting")
-// const Picture = require("../models/picture")
+const Picture = require("../models/picture")
 
 // Instantiate router
 const router = express.Router()
@@ -23,51 +22,51 @@ const router = express.Router()
 
 // SHOW
 // GET - retrieve a comment
-router.get("/comment/:sightingId/:commentId", (req, res, next) => {
-    const sightingId = req.params.sightingId
+router.get("/pictures/:pictureId/:commentId", (req, res, next) => {
+    const pictureId = req.params.pictureId
     const commentId = req.params.commentId
-    Sighting.findOne(
-        { "_id": ObjectId(sightingId) },
+    Picture.findOne(
+        { "_id": ObjectId(pictureId) },
         { "comments": {
             $elemMatch: { _id: ObjectId(commentId) }}
         }
     )
     // .populate("owner")
     .then(handle404)
-    .then(sighting => res.status(200).json({
-        sighting: sighting.toObject() }))
+    .then(picture => res.status(200).json({
+        picture: picture.toObject() }))
     .catch(next)
 })
 
 // CREATE
 // POST - create a comment
-router.post("/comment/:sightingId", requireToken, removeBlanks, (req, res, next) => {
+router.post("/pictures/:pictureId/comment", requireToken, removeBlanks, (req, res, next) => {
 	const comment = req.body.comment
-    const sightingId = req.params.sightingId
+    const pictureId = req.params.pictureId
     req.body.comment.owner = req.user.id
 
-	Sighting.findById(sightingId)
+	Picture.findById(pictureId)
         .then(handle404)
-        .then(sighting => {
-            console.log("This is the sighting:", sighting)
+        .then(picture => {
+            console.log("This is the picture:", picture)
             console.log("This is the comment:", comment)
-            sighting.comments.push(comment)
-            return sighting.save()
+            picture.comments.push(comment)
+            return picture.save()
         })
-        .then(sighting => res.status(201).json({ sighting: sighting }))
+        .then(picture => res.status(201).json({ picture: picture }))
         .catch(next)    
 })
 
 // UPDATE
 // PATCH - edit a specific comment
 // ** Work in comment owner validation **
-router.patch("/comment/:sightingId/:commentId", requireToken, removeBlanks, (req, res, next) => {
+router.patch("/pictures/:pictureId/:commentId", requireToken, removeBlanks, (req, res, next) => {
     delete req.body.owner
-    const sightingId = req.params.sightingId
+    const pictureId = req.params.pictureId
     const commentId = req.params.commentId
     const commentUpdate = req.body.comment.text
-    Sighting.updateOne({
-        "_id": ObjectId(sightingId)
+    Picture.updateOne({
+        "_id": ObjectId(pictureId)
     },{
         $set: {
             "comments.$[comments].text": commentUpdate
@@ -90,11 +89,11 @@ router.patch("/comment/:sightingId/:commentId", requireToken, removeBlanks, (req
 
 // REMOVE
 // Delete - delete comment
-router.delete("/comment/:sightingId/:commentId", requireToken, (req, res, next) => {
-    const sightingId = req.params.sightingId
+router.delete("/pictures/:pictureId/:commentId", requireToken, (req, res, next) => {
+    const pictureId = req.params.pictureId
     const commentId = req.params.commentId
-    Sighting.updateOne({
-        "_id": ObjectId(sightingId),
+    Picture.updateOne({
+        "_id": ObjectId(pictureId),
         "comments": {
             $elemMatch: { _id: ObjectId(commentId) }
         }
