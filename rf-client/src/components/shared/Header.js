@@ -26,10 +26,10 @@ const unauthenticatedOptions = (
 	<>
 		<Nav.Item className="m-2">
 			<Link to='sign-up' style={linkStyle}>Sign Up</Link>
-      </Nav.Item>
-      <Nav.Item className="m-2">
+		</Nav.Item>
+		<Nav.Item className="m-2">
 			<Link to='sign-in' style={linkStyle}>Sign In</Link>
-      </Nav.Item>
+		</Nav.Item>
 	</>
 )
 
@@ -47,9 +47,9 @@ const Header = ({ user }) => (
 	<Navbar bg='primary' variant='dark' expand='md'>
 		<Navbar.Brand className="m-2">
             <Link to='/' style={linkStyle}>
-               Ruffled Feathers
+				Ruffled Feathers
             </Link>
-      </Navbar.Brand>
+		</Navbar.Brand>
 		<Navbar.Toggle aria-controls='basic-navbar-nav' />
 		<Navbar.Collapse id='basic-navbar-nav'>
 			<Nav className='ml-auto'>
